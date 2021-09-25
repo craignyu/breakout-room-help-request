@@ -3,7 +3,7 @@
 const express = require('express');
 const socketIO = require('socket.io');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const INDEX = '/index.html';
 
 const server = express()
@@ -34,7 +34,3 @@ io.on('connection', (socket) => {
     io.emit('roomupdate', jsonRooms);
   });
 });
-
-/*
-setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
-*/
