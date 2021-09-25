@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello Socket.io</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background-color: #eee;
+        margin: 0px;
+        border-radius: 5px 5px 5px 5px;
+        padding: 10px;
+      }
+      h1 {
+        margin-top: 0px;
+      }
+      .group {
+        width: 50%;
+        float: left;
+        box-sizing: border-box;
+        border-bottom: 1px solid black;
+        min-height: 175px;
+      }
+      .heading {
+        font-size: 125%;
+        margin-bottom: 10px;
+      }
+      #group6 {
+        border-bottom: none;
+      }
+      #group7 {
+        border-bottom: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Breakout Room Help</h1>
+
+    <p>Use the check box next to thename of your breakout room to request help during our in-class programming session. Please un-check the box when your problem has been answered.</p>
+
+    <div id="room_container">
+      <div id="group0" class="group"></div>
+      <div id="group1" class="group""></div>
+      <div id="group2" class="group"></div>
+      <div id="group3" class="group"></div>
+      <div id="group4" class="group"></div>
+      <div id="group5" class="group"></div>
+      <div id="group6" class="group"></div>
+      <div id="group7" class="group"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js" integrity="sha512-WL6WGKMPBiM9PnHRYIn5YEtq0Z8XP4fkVb4qy7PP4vhmYQErJ/dySyXuFIMDf1eEYCXCrQrMJfkNwKc9gsjTjA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+
+      // setup our room interfaces in HTML
+      let tutors = ['Heyan', 'Katherine', 'Christian', 'Amelia', 'Ice', 'Nehal', 'Laila', 'Zunair'];
+      let roomsPerTutor = 5;
+      let checkboxes = {};
+
+      for (let i = 0; i < tutors.length; i++) {
+        let currentGroup = document.querySelector(`#group${i}`);
+        let heading = document.createElement('div');
+        heading.classList.add('heading');
+        heading.innerText = `Tutor for these rooms: ${tutors[i]}`;
+        currentGroup.appendChild(heading);
+
+        for (let j = 0; j < roomsPerTutor; j++) {
+          let row = document.createElement('div');
+          let box = document.createElement('input');
+          box.type = 'checkbox';
+          box.id = `room${(''+(j+i*roomsPerTutor+1)).padStart(2, '0')}`;
+          box.dataset.id = `room${(''+(j+i*roomsPerTutor+1)).padStart(2, '0')}`;
+          box.onclick = function(e) {
+            socket.emit('roomchange', e.currentTarget.dataset.id);
+          }
+          checkboxes[ `room${(''+(j+i*roomsPerTutor+1)).padStart(2, '0')}` ] = box;
+          let text = document.createElement('span');
+          text.innerText = `Room ${(''+(j+i*roomsPerTutor+1)).padStart(2, '0')}`;
+          row.appendChild(box);
+          row.appendChild(text);
+          currentGroup.appendChild(row);
+        }
+
+      }
+
+      // socket.io logic
+      var socket = io();
+      socket.on('roomupdate', function(data) {
+        let jsonParse = JSON.parse(data);
+        for (key in jsonParse) {
+          checkboxes[ key ].checked = jsonParse[key];
+        }
+      })
+    </script>
+  </body>
+</html>
