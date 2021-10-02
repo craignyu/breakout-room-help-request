@@ -30,6 +30,10 @@
       #group7 {
         border-bottom: none;
       }
+      .need_help {
+        background-color: red;
+        color: white;
+      }
     </style>
   </head>
   <body>
@@ -49,6 +53,11 @@
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
+
+    <!--
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.0.0/socket.io.js" integrity="sha512-Ot/rCfjQggSkYIyn5RBJk1VrM/MBC4SJV9FpY0x8hjjLAhJ/tI1GKibxplbVxZjQynnn7JYN9tH75NNdckFHpg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    -->
+
     <script>
 
       // setup our room interfaces in HTML
@@ -88,6 +97,12 @@
         let jsonParse = JSON.parse(data);
         for (key in jsonParse) {
           checkboxes[ key ].checked = jsonParse[key];
+          if(jsonParse[key]) {
+            checkboxes[ key ].parentElement.classList.add('need_help');
+          }
+          else {
+            checkboxes[ key ].parentElement.classList.remove('need_help');
+          }
         }
       })
     </script>
