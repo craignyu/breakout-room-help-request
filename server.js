@@ -14,7 +14,7 @@ const io = socketIO(server);
 
 // persistent room data
 let rooms = {};
-for (let i = 1; i <= 45; i++) {
+for (let i = 1; i <= 20; i++) {
   rooms[`room${(''+i).padStart(2, '0')}`] = false;
 }
 console.log(rooms);
